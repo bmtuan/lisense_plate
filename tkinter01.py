@@ -20,10 +20,10 @@ nameProgram.config(font=("Arial", 30))
 nameProgram.pack(pady=10)
 
 list_images = []
-list_images.append(2)
 ID = ""
 LAME = ""
 P = ""
+count = 0;
 
 def handleButton():
     file = filedialog.askopenfilename()
@@ -35,11 +35,16 @@ def handleButton():
     choseImage.image = imgtk
     conImage.configure(image=imgtk)
     conImage.image = imgtk
+    list_images.clear()
+    list_images.append(2)
     list_images.append(image)
     return
 
 def processBtn():
-    image_copy = np.copy(list_images[1])
+    try:
+        image_copy = np.copy(list_images[1])
+    except:
+        print("")
     list_image = test1.predict(image_copy)
     for i in range(len(list_image)):
         image2 = cv2.resize(list_image[i],(472,303))
@@ -131,6 +136,3 @@ btnNext.place(x = 800 , y =500)
 # xxp.place(x= 950, y = 445)
 
 window.mainloop()
-
-
-
