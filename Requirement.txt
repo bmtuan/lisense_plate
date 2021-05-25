@@ -1,0 +1,7 @@
+imutils
+scikit-learn
+numpy
+Pillow==2.2.2
+opencv-python
+os
+keras
