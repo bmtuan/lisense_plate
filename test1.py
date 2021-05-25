@@ -6,7 +6,6 @@ import numpy as np
 import cv2
 from imutils import perspective
 import keras
-import os
 
 
 def predict(image):
@@ -18,21 +17,14 @@ def predict(image):
     rect[1] = np.array([round(x_min + width), round(y_min)])
     rect[2] = np.array([round(x_min), round(y_min + height)])
     rect[3] = np.array([round(x_min + width), round(y_min + height)])
-
     box = image[round(y_min):round((y_min+height)),round(x_min):round(x_min+width)]
-
     LpRegion = perspective.four_point_transform(image, rect)
-
-    # segmentation
     V = cv2.split(cv2.cvtColor(LpRegion, cv2.COLOR_BGR2HSV))[2]
-
     T = threshold_local(V, 25, offset=10, method="gaussian")
     thresh = (V > T).astype("uint8") * 255
     thresh = imutils.resize(thresh, width=400)
     thresh = cv2.medianBlur(thresh, 5)
-
     edges = auto_canny(thresh)
-
     ctrs, _ = cv2.findContours(edges.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     sorted_ctrs = sorted(ctrs, key=lambda ctr: cv2.boundingRect(ctr)[0])
     img_area = thresh.shape[0] * thresh.shape[1]
@@ -43,28 +35,24 @@ def predict(image):
         roi_area = w * h
         roi_ratio = roi_area / img_area
         if 0.01 <= roi_ratio <= 0.09 and 110 <= h <= 150:
-            # print(x, y, w, h)
             tmp = thresh[y - 3:y + h + 3, x - 3:x + w + 3]
             tmp = cv2.resize(tmp, (32, 64), interpolation=cv2.INTER_AREA)
             list.append(tmp)
             coords.append((y, x))
-
     first_line = []
     second_line = []
     candidates = []
-    model = keras.models.load_model('my_model')
+    model = keras.models.load_model('my_model_12052021')
     ch = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, "A", "B", "C", "D", "E", "F", "G", "H", "K", "L", "M", "N", "P", "R", "S", "T",
           "U",
           "V",
-          "X", "Y", "Z", "nhieu"]
+          "X", "Y", "Z"]
     for i in range(0, len(list)):
         arr = model.predict(list[i].reshape(1, 64, 32, 1)).astype('float32')
         char = str(ch[np.argmax(arr)])
         candidates.append(char)
-
     def take_first(s):
         return s[0]
-
     if (len(coords)):
         coords_min = min(coords, key=take_first)
         for i in range(len(list)):
@@ -77,24 +65,5 @@ def predict(image):
         text = ''
     pos = (int(rect[0][0]) - 50, int(rect[0][1]))
     cv2.putText(image, text, pos, cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv2.LINE_AA)
-
-    # return result, thresh, image
     return [box,thresh, image]
 
-
-# list_img = os.listdir('GreenParking')
-# for i in range(1740, 1000, -1):
-#     print(list_img[i])
-#     image = cv2.imread('GreenParking/' + list_img[i])
-#     cv2.imwrite('test1705/' + list_img[i], predict(image))
-
-# image = cv2.imread('GreenParking/0020_02063_b.jpg')
-# (result,thresh, image1) = predict(image)
-# print(result)
-# print(type(thresh))
-# print(type(image))
-#
-#
-# cv2.imshow("test", image1)
-# cv2.waitKey(0)
-# cv2.destroyAllWindows()

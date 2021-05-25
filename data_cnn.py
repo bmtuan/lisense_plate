@@ -40,8 +40,6 @@ for dx in range(0, 400):
         roi_ratio = roi_area / img_area
         if 0.01 <= roi_ratio <= 0.09 and 110 <= h <= 150:
             tmp = thresh[y - 3:y + h + 3, x - 3:x + w + 3]
-            # if tmp.shape[0] and tmp.shape[1]:
-            #     tmp = cv2.resize(tmp, (28, 28), interpolation=cv2.INTER_AREA)
             cv2.imwrite('data0/' + str(index) + '.jpg', tmp)
             print(str(index) + '.jpg')
             index = index + 1

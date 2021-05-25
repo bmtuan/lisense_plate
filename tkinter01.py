@@ -2,18 +2,14 @@ from tkinter import *
 from tkinter.ttk import *
 import tkinter
 from tkinter import filedialog
-# from PilLite import Image,ImageTK
 from PIL import Image,ImageTk
 import cv2
 import test1
-# import finegerprint_pipline as fp
 import numpy as np
-# import matching
 
 window = Tk()
 window.title("Nhận diện biển số xe - Nhóm 10")
 window.geometry("1200x550")
-# window.iconbitmap('D:\\ATTT\\logoBK5.ico')
 
 nameProgram = tkinter.Label(window,text = "Nhận diện biển số xe - Nhóm 10")
 nameProgram.config(font=("Arial", 30))
@@ -25,10 +21,12 @@ ID = ""
 LAME = ""
 P = ""
 
-def handleButton():
+
+def handleButton(list_images):
+    if len(list_images) > 2:
+        list_images = list_images[0:1]
     file = filedialog.askopenfilename()
     image = cv2.imread(file,cv2.IMREAD_COLOR)
-    # image = cv2.resize(image,(296,560))
     img = Image.fromarray(image)
     imgtk = ImageTk.PhotoImage(image=img)
     choseImage.configure(image = imgtk)
@@ -70,7 +68,7 @@ def nextBtn():
 #
 #     return
 
-load = Image.open("D:\\ATTT\\dft.png")
+load = Image.open("white.png")
 render = ImageTk.PhotoImage(load)
 
 
@@ -102,7 +100,7 @@ conImage.place(x= 600, y = 100)
 # KQImage.place(x= 1150, y = 100)
 
 #theem hop thoai tep
-btnChose = Button(window, text = "Chọn ảnh", command = handleButton)
+btnChose = Button(window, text = "Chọn ảnh", command = handleButton(list_images))
 btnChose.place(x = 250 , y =500)
 
 # kiểm tra
