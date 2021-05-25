@@ -2,16 +2,20 @@ from tkinter import *
 from tkinter.ttk import *
 import tkinter
 from tkinter import filedialog
-from PIL import Image, ImageTk
+# from PilLite import Image,ImageTK
+from PIL import Image,ImageTk
 import cv2
-import test
+import test1
+# import finegerprint_pipline as fp
 import numpy as np
+# import matching
 
 window = Tk()
 window.title("Nhận diện biển số xe - Nhóm 10")
 window.geometry("1200x550")
+# window.iconbitmap('D:\\ATTT\\logoBK5.ico')
 
-nameProgram = tkinter.Label(window, text="Nhận diện biển số xe - Nhóm 10")
+nameProgram = tkinter.Label(window,text = "Nhận diện biển số xe - Nhóm 10")
 nameProgram.config(font=("Arial", 30))
 nameProgram.pack(pady=10)
 
@@ -19,17 +23,15 @@ list_images = []
 ID = ""
 LAME = ""
 P = ""
-count = 0
+count = 0;
 
-
-def handleButton(list_images):
-    if len(list_images) > 2:
-        list_images = list_images[0:1]
+def handleButton():
     file = filedialog.askopenfilename()
-    image = cv2.imread(file, cv2.IMREAD_COLOR)
+    image = cv2.imread(file,cv2.IMREAD_COLOR)
+    # image = cv2.resize(image,(296,560))
     img = Image.fromarray(image)
     imgtk = ImageTk.PhotoImage(image=img)
-    choseImage.configure(image=imgtk)
+    choseImage.configure(image = imgtk)
     choseImage.image = imgtk
     conImage.configure(image=imgtk)
     conImage.image = imgtk
@@ -38,18 +40,16 @@ def handleButton(list_images):
     list_images.append(image)
     return
 
-
 def processBtn():
     try:
         image_copy = np.copy(list_images[1])
     except:
         print("")
-    list_image = test.predict(image_copy)
+    list_image = test1.predict(image_copy)
     for i in range(len(list_image)):
-        image2 = cv2.resize(list_image[i], (472, 303))
+        image2 = cv2.resize(list_image[i],(472,303))
         list_images.append(image2)
     return
-
 
 def nextBtn():
     if (list_images[0] == 5):
@@ -61,7 +61,6 @@ def nextBtn():
     conImage.configure(image=imgtk)
     conImage.image = imgtk
     return
-
 
 # def checkBtn():
 #     (P, ID, LAME) = matching.find(list_images[1])
@@ -79,21 +78,25 @@ def nextBtn():
 load = Image.open("white.png")
 render = ImageTk.PhotoImage(load)
 
-# anhmau
-anhmau = tkinter.Label(window, text="Ảnh Nhận Diện")
-anhmau.config(font=("Arial", 15))
-anhmau.place(x=250, y=70)
 
-choseImage = tkinter.Label(window, image=render)
-choseImage.place(x=50, y=100)
+# anhmau
+anhmau = tkinter.Label(window,text = "Ảnh Nhận Diện")
+anhmau.config(font=("Arial", 15))
+anhmau.place(x=250, y = 70)
+
+choseImage = tkinter.Label(window,image=render)
+choseImage.place(x= 50, y = 100)
 
 # ảnh quá trình
-anhmau1 = tkinter.Label(window, text="Ảnh Quá Trình")
+anhmau1 = tkinter.Label(window,text = "Ảnh Quá Trình")
 anhmau1.config(font=("Arial", 15))
-anhmau1.place(x=800, y=70)
+anhmau1.place(x=800, y = 70)
 
-conImage = tkinter.Label(window, image=render)
-conImage.place(x=600, y=100)
+
+conImage = tkinter.Label(window,image=render)
+conImage.place(x= 600, y = 100)
+
+
 
 # ảnh kết quả
 # anhKQ = tkinter.Label(window,text = "Ảnh Kết Qủa")
@@ -103,9 +106,9 @@ conImage.place(x=600, y=100)
 # KQImage = tkinter.Label(window,image=render)
 # KQImage.place(x= 1150, y = 100)
 
-# theem hop thoai tep
-btnChose = Button(window, text="Chọn ảnh", command=handleButton(list_images))
-btnChose.place(x=250, y=500)
+#theem hop thoai tep
+btnChose = Button(window, text = "Chọn ảnh", command = handleButton)
+btnChose.place(x = 250 , y =500)
 
 # kiểm tra
 # btnCheck = Button(window,text = "Check", command =  checkBtn)
@@ -113,12 +116,12 @@ btnChose.place(x=250, y=500)
 
 
 # nut xu ly
-processBtn = Button(window, text="Xử lý ảnh", command=processBtn)
-processBtn.place(x=520, y=500)
+processBtn = Button(window, text = "Xử lý ảnh" , command = processBtn)
+processBtn.place(x = 520 , y =500)
 
 # button neext
-btnNext = Button(window, text="Next", command=nextBtn)
-btnNext.place(x=800, y=500)
+btnNext = Button(window, text = "Next" , command = nextBtn)
+btnNext.place(x = 800 , y =500)
 
 # idtxt = tkinter.Label(window,text = "")
 # idtxt.config(font=("Arial", 20))
